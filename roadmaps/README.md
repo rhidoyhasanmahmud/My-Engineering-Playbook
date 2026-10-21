@@ -9,11 +9,14 @@ Choose a track that matches your goal. The steps are self-paced: move on when yo
 | Stage | Focus | Outcome | Where to start |
 | --- | --- | --- | --- |
 | 1 | Backend foundations | Explain how clients and services communicate | [Backend fundamentals](backend-fundamentals.md) |
-| 2 | Data and persistence | Explain transactions, storage choices and query performance | [Database engineering](database-engineering.md) |
+| 2a | Database foundations, before SQL | Model records, keys and relationships; explain normalization | [Database foundations](database-foundations.md) |
+| 2b | SQL and database engineering | Explain transactions, storage choices and query performance | [Database engineering](database-engineering.md) |
 | 3 | Cloud foundations | Reason about availability, cost and deployment choices | [AWS & cloud](aws-cloud.md) |
 | Alongside any stage | Problem solving | Write a solution, test edge cases and discuss complexity | [Coding practice](coding-practice.md) |
 
 Already comfortable with a stage? Use its checkpoints to identify gaps. These are independent tracks with prerequisites; you do not need to finish every planned topic before switching tracks.
+
+**Completely new to databases?** You can start directly with [Database foundations: before SQL](database-foundations.md). It has no backend or programming prerequisite and includes a comprehensive note, a worked ER model and an independent design exercise.
 
 ## How to follow a track
 

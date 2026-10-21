@@ -8,6 +8,8 @@ status: draft
 
 [Study roadmap](../../roadmaps/database-engineering.md) · [All notes](../README.md)
 
+**Start with the [comprehensive before-SQL foundation](00-before-sql.md)** for a structured introduction, a worked data model and verified references. This earlier note remains draft background.
+
 # 📘 What is a Database?
 
 A **database** is a collection of data that is stored in a **structured way**, usually in tables, so a computer program can quickly **find, insert, update, or delete** data.

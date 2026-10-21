@@ -2,8 +2,11 @@
 
 [All notes](../README.md) · [Study roadmap](../../roadmaps/database-engineering.md) · [SQL practice](../../practice/sql/README.md)
 
+**New to databases?** Follow the [before-SQL roadmap](../../roadmaps/database-foundations.md). Its comprehensive note explains the foundations using one Student–Course Enrollment example, then the [library-loan capstone](../../practice/database-design/before-sql-capstone.md) helps you apply them independently.
+
 | Note | Focus | Status |
 | --- | --- | --- |
+| [Database foundations before SQL](00-before-sql.md) | Database vocabulary, models, types, keys, constraints, relationships, ER design and normalization through 3NF | Structured |
 | [Database introduction](01-database-introduction.md) | Purpose, use cases and storage orientation | Draft |
 | [ACID](02-acid.md) | Transactions, ACID and consistency | Draft |
 | [Database internals](03-database-internals.md) | Files, pages, rows and index lookups | Draft |

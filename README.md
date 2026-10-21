@@ -27,6 +27,7 @@ Written in clear English for students, working developers and anyone revisiting 
 | Track | What you will learn | Roadmap | Material available now |
 | --- | --- | --- | --- |
 | Backend fundamentals | Communication patterns and the foundations of reliable APIs | [Follow the track](roadmaps/backend-fundamentals.md) | One structured communication note; further topics planned |
+| Database foundations — before SQL | Data modelling, keys, relationships, constraints and normalization | [Start from zero](roadmaps/database-foundations.md) | One comprehensive structured note and a capstone with an answer guide |
 | Database engineering | Transactions, storage, indexing and SQL reasoning | [Follow the track](roadmaps/database-engineering.md) | Five draft concept notes, SQL exercises and design scenarios |
 | AWS & cloud | Cloud concepts, AWS foundations and architecture decisions | [Follow the track](roadmaps/aws-cloud.md) | Four draft notes in the existing SAA-C03 collection |
 | Coding practice | String manipulation, reasoning and problem-solving habits | [Follow the track](roadmaps/coding-practice.md) | Ten beginner string exercises with Java and Python solutions |
