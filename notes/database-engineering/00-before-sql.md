@@ -4,13 +4,13 @@ track: database-foundations
 status: structured
 ---
 
-# Database foundations before SQL
+# Database foundations before SQL — reference handbook
 
-[Learning roadmap](../../roadmaps/database-foundations.md) · [Database notes](README.md) · [Practice worksheet](../../practice/database-design/before-sql-capstone.md)
+[Beginner course](foundations/README.md) · [Learning roadmap](../../roadmaps/database-foundations.md) · [Database notes](README.md)
 
-**Start here if:** you have used an application or a spreadsheet, but cannot yet explain how its data should be organised. No programming, database installation or SQL knowledge is required.
+**New to databases? [Start with the short lessons →](foundations/README.md)** They introduce one idea at a time and include small practice questions. This longer page is an optional reference for looking up details after a lesson.
 
-**Finish able to:** turn simple requirements into tables, explain their keys and relationships, prevent common data errors and improve a design through third normal form. You will then be ready to learn SQL.
+**Reference scope:** tables, keys, relationships, constraints, ER design, normalization and introductory reliability concepts. You do not need to read this entire page before beginning SQL.
 
 This note teaches concepts using one small **Student–Course Enrollment** system. Tables and expected outcomes are illustrations, not results from an executed database. Product-specific details are labelled; PostgreSQL references use version 18.
 
@@ -422,7 +422,7 @@ These are expected outcomes under the declared rules, evaluated independently ag
 | Delete C101 while its enrollments remain | Reject under our policy | Enrollment still references C101 |
 | Delete S103 | Accept under the listed rules | S103 currently has no dependents |
 
-Try the [SQL-free capstone](../../practice/database-design/before-sql-capstone.md) before reading its answer guide. It transfers the same reasoning to a library-loan model, so you must make decisions rather than copy this diagram.
+For optional extra practice after the beginner lessons, try the [SQL-free library-loan challenge](../../practice/database-design/before-sql-capstone.md) before reading its answer guide. It transfers the same reasoning to a different domain and includes more demanding rules.
 
 ## Trade-offs
 

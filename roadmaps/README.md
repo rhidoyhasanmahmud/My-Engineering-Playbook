@@ -16,7 +16,7 @@ Choose a track that matches your goal. The steps are self-paced: move on when yo
 
 Already comfortable with a stage? Use its checkpoints to identify gaps. These are independent tracks with prerequisites; you do not need to finish every planned topic before switching tracks.
 
-**Completely new to databases?** You can start directly with [Database foundations: before SQL](database-foundations.md). It has no backend or programming prerequisite and includes a comprehensive note, a worked ER model and an independent design exercise.
+**Completely new to databases? [Start the beginner course →](../notes/database-engineering/foundations/README.md)** It has no backend or programming prerequisite. Open Lesson 1 and follow the Next lesson links; the examples build on each other.
 
 ## How to follow a track
 

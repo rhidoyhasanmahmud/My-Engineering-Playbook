@@ -8,7 +8,7 @@ status: draft
 
 [Study roadmap](../../roadmaps/database-engineering.md) · [All notes](../README.md)
 
-**Start with the [comprehensive before-SQL foundation](00-before-sql.md)** for a structured introduction, a worked data model and verified references. This earlier note remains draft background.
+**New to databases? [Start with the beginner lessons](foundations/README.md)** and follow their Next lesson links. This earlier note remains draft background.
 
 # 📘 What is a Database?
 

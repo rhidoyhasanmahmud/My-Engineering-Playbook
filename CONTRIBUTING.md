@@ -46,6 +46,12 @@ Existing material was migrated as draft content. When improving it, review the t
 - Never add invented benchmarks, citations or claims about production experience.
 - Use the [study tracker](templates/study-tracker.md) for personal progress; shared roadmaps describe content availability.
 
+## Writing beginner lessons
+
+The [database beginner course](notes/database-engineering/foundations/README.md) introduces one main idea per lesson. State its goal, build on the preceding example and include a small task with a collapsible answer. Keep the seven study-note sections; supplementary sections may sit inside an **Extra reading** disclosure.
+
+Keep **Previous**, **Course home** and **Next lesson** navigation consistent. Use the same example throughout the path and explain new terms before relying on them. Link detailed reference material as optional reading; advanced exercises must not become an accidental prerequisite for the beginner's next step.
+
 ## Validate the documentation
 
 From the repository root, with Python 3.10 or newer:
