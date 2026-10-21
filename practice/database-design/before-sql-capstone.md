@@ -1,6 +1,8 @@
-# Before-SQL capstone: library loans
+# Optional design challenge: library loans
 
 [Foundation roadmap](../../roadmaps/database-foundations.md) · [Concept note](../../notes/database-engineering/00-before-sql.md) · [Design practice](README.md)
+
+**Optional, after the beginner path:** start with the smaller [Student–Course finish task](../../notes/database-engineering/foundations/10-finish-your-first-design.md). This library challenge adds a new domain and more demanding business rules. It is not required before starting SQL.
 
 An original, SQL-free exercise. Use paper, Markdown tables or a diagram tool. The expected results follow from the stated rules; no database code has been executed.
 

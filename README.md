@@ -17,6 +17,8 @@ Written in clear English for students, working developers and anyone revisiting 
 
 ## Start here
 
+**Learning databases from zero? [Open the beginner course →](notes/database-engineering/foundations/README.md)** Start with Lesson 1 and follow its Next lesson links. No coding or installation is needed.
+
 1. **Choose a track** from the [learning roadmaps](roadmaps/README.md). Each track lists prerequisites, reading order and practical checkpoints.
 2. **Read the linked note** and explain the idea in your own words.
 3. **Try the exercise** before looking at a solution. Record what worked and what needs another attempt.
@@ -27,7 +29,7 @@ Written in clear English for students, working developers and anyone revisiting 
 | Track | What you will learn | Roadmap | Material available now |
 | --- | --- | --- | --- |
 | Backend fundamentals | Communication patterns and the foundations of reliable APIs | [Follow the track](roadmaps/backend-fundamentals.md) | One structured communication note; further topics planned |
-| Database foundations — before SQL | Data modelling, keys, relationships, constraints and normalization | [Start from zero](roadmaps/database-foundations.md) | One comprehensive structured note and a capstone with an answer guide |
+| Database foundations — before SQL | Build a small data model one idea at a time | [Start from zero](notes/database-engineering/foundations/README.md) | Ten short guided lessons; optional reference handbook and extra practice |
 | Database engineering | Transactions, storage, indexing and SQL reasoning | [Follow the track](roadmaps/database-engineering.md) | Five draft concept notes, SQL exercises and design scenarios |
 | AWS & cloud | Cloud concepts, AWS foundations and architecture decisions | [Follow the track](roadmaps/aws-cloud.md) | Four draft notes in the existing SAA-C03 collection |
 | Coding practice | String manipulation, reasoning and problem-solving habits | [Follow the track](roadmaps/coding-practice.md) | Ten beginner string exercises with Java and Python solutions |

@@ -8,7 +8,7 @@
 
 | Step | Topic | Study material | Status | Practical checkpoint |
 | --- | --- | --- | --- | --- |
-| 1 | Database foundations before SQL | [Comprehensive foundation note](../notes/database-engineering/00-before-sql.md) and [guided roadmap](database-foundations.md) | Structured | Design a small model with keys, constraints and relationships; explain normalization through 3NF |
+| 1 | Database foundations before SQL | [Start the beginner course](../notes/database-engineering/foundations/README.md) and [lesson list](database-foundations.md#lesson-list) | Ten structured lessons | Explain a small model with keys, constraints and relationships; work through normalization |
 | 2 | SQL foundations | [Query order notes](../practice/sql/query-order.md) and [five SQL exercises](../practice/sql/leetcode/README.md) | Draft; full introduction planned | Write a filter with `NULL` handling and explain the logical stages of a query |
 | 3 | Transactions and consistency | [ACID](../notes/database-engineering/02-acid.md) | Draft | Explain what should happen if a money transfer fails halfway through |
 | 4 | Storage internals | [Database internals](../notes/database-engineering/03-database-internals.md) | Draft | Sketch pages, rows and an index lookup; identify engine-specific assumptions |
@@ -19,7 +19,7 @@
 
 The roadmap defines the reading order. Existing numeric filenames are identifiers and may differ from that order.
 
-The earlier [database introduction](../notes/database-engineering/01-database-introduction.md) remains available as draft background on use cases and storage orientation. Use the structured foundation above as the beginner entry point.
+The earlier [database introduction](../notes/database-engineering/01-database-introduction.md) remains available as draft background on use cases and storage orientation. Use the guided lessons above as the beginner entry point.
 
 ## Check your understanding
 
