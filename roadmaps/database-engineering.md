@@ -4,11 +4,11 @@
 
 **Goal:** Understand how databases preserve data and how storage, transactions and indexes affect application behaviour.
 
-**Prerequisites:** Basic programming and familiarity with tables, rows and columns. If SQL is new to you, learn `SELECT`, filtering and joins before the internals and indexing steps; a complete introductory SQL lesson is still planned.
+**Prerequisites:** Basic programming for the later application work. If database concepts are new, begin with the [Database foundations: before SQL roadmap](database-foundations.md); that foundation requires no programming or SQL. Learn `SELECT`, filtering and joins before the internals and indexing steps; a complete introductory SQL lesson is still planned.
 
 | Step | Topic | Study material | Status | Practical checkpoint |
 | --- | --- | --- | --- | --- |
-| 1 | Database foundations | [Database introduction](../notes/database-engineering/01-database-introduction.md) | Draft | Describe when an application needs a database and compare row-oriented and column-oriented storage |
+| 1 | Database foundations before SQL | [Comprehensive foundation note](../notes/database-engineering/00-before-sql.md) and [guided roadmap](database-foundations.md) | Structured | Design a small model with keys, constraints and relationships; explain normalization through 3NF |
 | 2 | SQL foundations | [Query order notes](../practice/sql/query-order.md) and [five SQL exercises](../practice/sql/leetcode/README.md) | Draft; full introduction planned | Write a filter with `NULL` handling and explain the logical stages of a query |
 | 3 | Transactions and consistency | [ACID](../notes/database-engineering/02-acid.md) | Draft | Explain what should happen if a money transfer fails halfway through |
 | 4 | Storage internals | [Database internals](../notes/database-engineering/03-database-internals.md) | Draft | Sketch pages, rows and an index lookup; identify engine-specific assumptions |
@@ -18,6 +18,8 @@
 | 8 | Concurrency and operations | Notes to be written | Planned | Reproduce an isolation anomaly and explain a backup/restore approach |
 
 The roadmap defines the reading order. Existing numeric filenames are identifiers and may differ from that order.
+
+The earlier [database introduction](../notes/database-engineering/01-database-introduction.md) remains available as draft background on use cases and storage orientation. Use the structured foundation above as the beginner entry point.
 
 ## Check your understanding
 
