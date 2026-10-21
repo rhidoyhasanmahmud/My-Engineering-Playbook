@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Python documentation checks ###
+__pycache__/
+*.py[cod]
