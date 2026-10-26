@@ -5,10 +5,8 @@
 **Course:** https://www.udemy.com/course/database-engines-crash-course/  
 **Status:** Not started (update when you begin)  
 
-## Learning dashboard
+## Course resources
 
-- [Progress tracker](progress.md)
-- [Learning outcomes](learning-outcomes.md)
 - [Section note template](templates/section-note-template.md)
 - [Experiment template](templates/experiment-template.md)
 
@@ -31,7 +29,7 @@
 1. Watch a section and capture key concepts in your own words.
 2. Write practical examples and clarify trade-offs.
 3. Run experiments when relevant and record observations.
-4. Update [progress](progress.md) and [outcomes](learning-outcomes.md).
-5. Cross-link durable concepts to [Database Internals](../../../../internals/README.md).
+4. Summarize the key takeaways in the relevant section note.
+5. Cross-link durable concepts to [Database Internals](../../../internals/README.md).
 
 Do not reproduce restricted course videos, slides, or transcripts.
