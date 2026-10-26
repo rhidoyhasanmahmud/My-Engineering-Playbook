@@ -1,10 +1,10 @@
 # Cloud Engineering — Learning
 
-Cloud courses are organized directly under `learning/`, following the Database Engineering convention.
+Course notes are organized directly under `learning/`, following the Database Engineering convention.
 
-## Udemy courses
+## AWS courses
 
-- [Cloud course 1 — title pending verification](udemy-103aFP3/README.md)
-- [Cloud course 2 — title pending verification](udemy-106WtW3/README.md)
+- [Ultimate AWS Certified Cloud Practitioner (CLF-C02)](aws-certified-cloud-practitioner-clf-c02/README.md) — 23 sections, 277 lectures
+- [Ultimate AWS Certified Solutions Architect Associate (SAA-C03)](aws-solutions-architect-associate-saa-c03/README.md) — 33 sections, 396 lectures
 
-> Course titles and curricula have not been verified from the shared Udemy links. Replace provisional folder names and create exact section/lecture files after reviewing the course contents.
+Write concise original notes under each course's `notes/` folder. Follow the actual section and lecture order; no separate progress or outcomes files.
