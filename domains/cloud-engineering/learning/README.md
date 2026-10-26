@@ -1,10 +1,8 @@
-# Cloud Engineering — Learning
+# Cloud Engineering Learning
 
-Course notes are organized directly under `learning/`, following the Database Engineering convention.
+Two complementary ways to learn:
 
-## AWS courses
+- [Core Concepts](core-concepts/README.md) — independent, concept-first deep learning from infrastructure to Kubernetes and production engineering.
+- [Courses](courses/README.md) — instructor-led course notes, exercises, and learning outcomes.
 
-- [Ultimate AWS Certified Cloud Practitioner (CLF-C02)](aws-certified-cloud-practitioner-clf-c02/README.md) — 23 sections, 277 lectures
-- [Ultimate AWS Certified Solutions Architect Associate (SAA-C03)](aws-solutions-architect-associate-saa-c03/README.md) — 33 sections, 396 lectures
-
-Write concise original notes under each course's `notes/` folder. Follow the actual section and lecture order; no separate progress or outcomes files.
+Existing AWS course material remains available in its original folders until migrated.

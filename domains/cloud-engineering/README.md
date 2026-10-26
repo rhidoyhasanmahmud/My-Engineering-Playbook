@@ -1,5 +1,8 @@
 # Cloud Engineering
 
-Domain home for cloud fundamentals, AWS and other cloud platforms, infrastructure, architecture, security, operations, and practical experiments.
+Cloud infrastructure, containerization, orchestration, architecture, security, and operations.
 
-Create learning, internals, and case-study folders as content is added.
+## Learning
+
+- [Core Concepts](learning/core-concepts/README.md) — fundamentals, Docker, Kubernetes, and production internals.
+- [Courses](learning/courses/README.md) — structured instructor-led courses.
