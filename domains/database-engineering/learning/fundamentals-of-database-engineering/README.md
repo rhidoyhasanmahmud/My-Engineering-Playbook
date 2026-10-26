@@ -6,9 +6,8 @@
 
 ## Course notes by section
 
-The following **18 sections** follow the course order shown in the supplied Udemy screenshot (167 lectures in total). Each section has its own folder, README, and initial notes file. The screenshot does not reveal individual lecture/subsection names; add exact lecture-named Markdown files after sharing the expanded section lists.
+The following **16 selected sections** follow the course order shown in the supplied Udemy screenshot, excluding Course Updates and Archived Lectures. Each section has its own folder, README, and initial notes file. The screenshot does not reveal individual lecture/subsection names; add exact lecture-named Markdown files after sharing the expanded section lists.
 
-- [01. Course Updates](notes/01-course-updates/README.md) — 6 lectures
 - [02. ACID](notes/02-acid/README.md) — 10 lectures
 - [03. Understanding Database Internals](notes/03-understanding-database-internals/README.md) — 4 lectures
 - [04. Database Indexing](notes/04-database-indexing/README.md) — 14 lectures
@@ -25,7 +24,6 @@ The following **18 sections** follow the course order shown in the supplied Udem
 - [15. Homomorphic Encryption - Performing Database Queries on Encrypted Data](notes/15-homomorphic-encryption/README.md) — 9 lectures
 - [16. Answering Your Questions](notes/16-answering-your-questions/README.md) — 18 lectures
 - [17. Database Discussions](notes/17-database-discussions/README.md) — 17 lectures
-- [18. Archived Lectures](notes/18-archived-lectures/README.md) — 7 lectures
 
 ## Notes convention
 
