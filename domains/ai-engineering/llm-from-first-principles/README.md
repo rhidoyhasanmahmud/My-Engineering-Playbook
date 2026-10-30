@@ -3,8 +3,6 @@
 A 16-week, implementation-first learning journey to understand **how large language models work**, from numerical foundations and transformer training to inference optimization and production serving.
 
 **Audience:** Software engineers comfortable with Python, new to machine learning.  
-**Hardware:** Apple Silicon Mac (32 GB+ unified memory); CPU/MPS-friendly exercises.  
-**Commitment:** ~8–10 hours/week. **Status:** Planned; progress is recorded separately.
 
 ## Learning outcomes
 
