@@ -1,53 +1,99 @@
-# Phase 01 — Django Models and PostgreSQL
+# Phase 01 · Part 1 — SQL Foundations and Interview Practice
 
-**Project:** Helpdesk Ticket System  
-**Goal:** Build the Helpdesk data layer and use it to practice Django models, PostgreSQL and interview-style SQL. Each student moves to Phase 02 after completing the checks below.
+Learn SQL on a small training database. Solve each original problem before attempting the corresponding section of SQL 50. After completing the SQL work, continue to [Part 2 — Django Models Project](django-models/README.md).
 
-Research the concepts listed for each feature before implementing it. Run exercises in PostgreSQL and use a disposable database for schema changes and destructive exercises. Use Django shell for ORM practice.
+## How to work
 
-## Feature and learning map
+1. Read the schema, task and expected output. Research any unfamiliar SQL concept.
+2. Write a query locally in PostgreSQL. Check it against the sample rows, then add an edge case that could break it.
+3. Submit your own solutions for all 50 problems in the [SQL 50 study plan](https://leetcode.com/studyplan/top-sql-50/). Use a SQL dialect accepted by the platform and its exact output requirements.
+4. Keep an individual log of the problem, SQL pattern, submission result and any mistake you corrected. Keep your original practice solutions in numbered SQL files or one `practice.sql`.
 
-| Feature to build | Django practice | PostgreSQL practice |
-| --- | --- | --- |
-| **F01 · Record a ticket** with title, status, requester and creation time | Fields, choices, defaults, user foreign key and migrations. | Read generated DDL with `sqlmigrate`. In a scratch schema, create a practice table, add a column, insert rows, update one status, delete one seed row, then reset the table. |
-| **F02 · Categorize and assign tickets** with an optional agent | Foreign keys, reverse relations, nullable fields, `on_delete` and constraints. | Verify primary and foreign keys, unique category names, required fields, defaults and a status check constraint. List unassigned tickets using `IS NULL`; show requester and assigned agent by joining the user table twice. |
-| **F03 · Store comments and build a ticket timeline** | Reverse lookups, `on_delete`, related loading and combining query results. | Retrieve comments with author aliases. Combine ticket creation and comments into one timeline using `UNION ALL`; compare with `UNION`. |
-| **F04 · Search and filter the ticket queue** | Field lookups, `Q` objects, stable ordering, slicing and a composite index. | Search titles with `LIKE` or PostgreSQL `ILIKE`; combine status, priority and date filters using `AND`, `OR`, `NOT`, `IN` and a date range. Practice `DISTINCT`, `ORDER BY` and `LIMIT`. Compare plans with `EXPLAIN` before and after indexing. |
-| **F05 · Report on category and agent workload** | `annotate()`, filtered aggregations, `Exists`, `Subquery`, `Case` and `Coalesce`. | Use `LEFT JOIN` and `COUNT` to include empty categories. Use `GROUP BY` and `HAVING` for categories with at least three tickets. Report `MIN`, `MAX`, `SUM` and `AVG` of estimated effort by agent. Find categories without open tickets using `NOT EXISTS`. Use `CASE` for workload labels, `COALESCE` for missing totals and a view for the workload report. |
+## Run this fixture
 
-Use fixtures with an empty category, an unassigned ticket, a ticket with zero comments, multiple comments on one ticket, and two tickets with the same timestamp. Give tickets a priority and an optional estimated effort in minutes for queue and reporting exercises.
+Run this once in an empty practice database. Use IDs as the sort order unless a problem specifies a different order. Display rates and averages rounded to two decimal places where requested.
 
-Use the same dataset for additional join and subquery practice. Compare `RIGHT JOIN` with an equivalent `LEFT JOIN`; compare two agent queues with `FULL OUTER JOIN`; find pairs of tickets from the same requester with a self join; find agents whose ticket exceeds every estimate in a comparison set with `> ALL`, and repeat with `> ANY`. Use `INSERT INTO ... SELECT` and `CREATE TABLE ... AS SELECT` to copy a report into a scratch snapshot.
+```sql
+CREATE TABLE cohorts (
+    id integer PRIMARY KEY,
+    name text NOT NULL UNIQUE
+);
 
-Compare SQL Server `TOP`, `IDENTITY`, `SELECT INTO` and stored procedures with PostgreSQL equivalents. Practice PostgreSQL identity columns and write a small read-only procedure exercise that reports how many open tickets a given agent has.
+CREATE TABLE learners (
+    id integer PRIMARY KEY,
+    name text NOT NULL,
+    email text NOT NULL,
+    cohort_id integer NOT NULL REFERENCES cohorts(id),
+    mentor_id integer REFERENCES learners(id)
+);
 
-## Interview practice
+CREATE TABLE workshops (
+    id integer PRIMARY KEY,
+    title text NOT NULL,
+    track text NOT NULL
+);
 
-1. List every ticket and its comment count. Why does `COUNT(*)` give the wrong result for some tickets after a left join?
-2. Find requesters with at least three open tickets created in the last 30 days. Which condition belongs in `WHERE` and which belongs in `HAVING`?
-3. Return the latest ticket per requester, breaking ties by ticket ID. Solve it with a window function or PostgreSQL `DISTINCT ON`.
-4. Find categories without open tickets. What happens to a `NOT IN` check if its subquery returns a null?
-5. Joining comments inflated the total estimated effort per agent. Explain why and correct the report.
-6. A queue query slows down as ticket count grows. Show its query plan and explain whether your index helped.
+CREATE TABLE attempts (
+    id integer PRIMARY KEY,
+    learner_id integer NOT NULL REFERENCES learners(id),
+    workshop_id integer NOT NULL REFERENCES workshops(id),
+    attempted_on date NOT NULL,
+    score integer NOT NULL CHECK (score BETWEEN 0 AND 100),
+    minutes_spent integer NOT NULL CHECK (minutes_spent > 0)
+);
 
-## Helpdesk SQL interview challenges
+INSERT INTO cohorts VALUES (1, 'Cedar'), (2, 'Maple'), (3, 'Pine');
+INSERT INTO learners VALUES
+    (1, 'Ada', 'ada@example.test', 1, NULL),
+    (2, 'Bina', 'bina@example.test', 1, 1),
+    (3, 'Chen', 'chen@example.test', 2, 1),
+    (4, 'Dara', 'dara@example.test', 2, NULL),
+    (5, 'Eli', 'eli@example.test', 1, 1);
+INSERT INTO workshops VALUES
+    (10, 'Filtering', 'SQL'),
+    (20, 'Joins', 'SQL'),
+    (30, 'Models', 'Django'),
+    (40, 'Testing', 'Django');
+INSERT INTO attempts VALUES
+    (101, 1, 10, '2026-01-01', 70, 20),
+    (102, 1, 10, '2026-01-03', 90, 35),
+    (103, 1, 20, '2026-01-03', 85, 25),
+    (104, 2, 10, '2026-01-02', 65, 15),
+    (105, 2, 20, '2026-01-04', 80, 40),
+    (106, 3, 20, '2026-01-02', 80, 30),
+    (107, 3, 30, '2026-01-04', 95, 20),
+    (108, 4, 30, '2026-01-04', 95, 25),
+    (109, 4, 10, '2026-01-05', 60, 10);
+```
 
-Use the existing Helpdesk schema and fixtures. Write PostgreSQL queries for the outputs below.
+## Original practice problems
 
-| Feature | Challenge and expected output | SQL pattern |
-| --- | --- | --- |
-| F02 · Categories | List every category that has never received a ticket. Return category ID and name. Compare `NOT EXISTS` with a left join. | Anti-join |
-| F03 · Comments | For each ticket with comments, return the date of its first comment and the number of comments posted on that date. Include ties on the first date. | Grouped minimum, join back and aggregation |
-| F04 · SLA queue | Find open tickets created yesterday whose priority exceeds the priority of the previous ticket from the same requester. Exclude tickets with no predecessor. Find the predecessor before applying the date and status filters. Break timestamp ties by ticket ID. | `LAG()`, partitioning and filter order |
-| F05 · Agent workload | For every agent with assigned tickets, return the share of assigned tickets that are resolved, rounded to two decimals. Keep agents whose share is zero. | Conditional aggregation, decimal division and rounding |
-| F05 · Effort report | Return the second-highest **distinct** estimated effort across all tickets. Return one row with `NULL` if fewer than two distinct non-null values exist. | `DISTINCT`, scalar result and missing values |
-| F05 · Staffing | Ignore tickets with unknown effort. Order the open queue by priority descending, then creation time and ID ascending. With a 120-minute budget, return the last ticket in the longest prefix that fits, plus the cumulative effort at that point. | Running sum and deterministic ordering |
+| # | Skill | Problem | Expected output on the fixture |
+| --- | --- | --- | --- |
+| 01 | Filtering, comparisons, sorting | From January 2 through January 4 inclusive, return attempts scoring at least 80. Sort by score descending, then attempt ID ascending. | `attempt_id`: 107, 108, 102, 103, 105, 106 |
+| 02 | Boolean logic, nulls, text matching | Return learners in Cedar with a mentor, plus unmentored learners in Maple. Keep only emails ending in `@example.test`. | `learner_id`: 2, 4, 5 |
+| 03 | Inner join | List learner and workshop names for attempts made on January 3, one row per attempt. | `attempt_id, learner, workshop`: (102, Ada, Filtering), (103, Ada, Joins) |
+| 04 | Outer join, zero counts | Count attempts per workshop and retain workshops with zero attempts. | `workshop_id, attempts`: (10, 4), (20, 3), (30, 2), (40, 0) |
+| 05 | Self join, grouping, HAVING | Return mentors with at least two direct mentees and show each count. | `mentor_id, mentees`: (1, 3) |
+| 06 | Conditional aggregation | For every learner, report the percentage of attempts scoring at least 80. Return 0.00 for a learner with no attempts. | `learner_id, pass_pct`: (1, 66.67), (2, 50.00), (3, 100.00), (4, 50.00), (5, 0.00) |
+| 07 | Distinct counts, groups | Find learners who attempted at least two distinct SQL workshops. Multiple attempts at one workshop count once. | `learner_id, coverage`: (1, 2), (2, 2) |
+| 08 | Aggregate totals, grouped dates | Return total minutes per attempt date over January 1–5. | `day, total_minutes`: (Jan 1, 20), (Jan 2, 45), (Jan 3, 60), (Jan 4, 85), (Jan 5, 10) |
+| 09 | Anti-join, NOT EXISTS | Find learners who never attempted a Django workshop. Include learners who never attempted any workshop. | `learner_id`: 1, 2, 5 |
+| 10 | Relational coverage, subqueries | Find learners who attempted every SQL workshop. Make the result still work when a third SQL workshop is added. | `learner_id`: 1, 2 |
+| 11 | Subquery, second distinct value | For each workshop, show its second-highest distinct score. Keep workshops without two distinct scores and return NULL for their score. | `workshop_id, second_score`: (10, 70), (20, 80), (30, NULL), (40, NULL) |
+| 12 | CTE, ROW_NUMBER, ties | Find the latest attempt per learner. If dates tie, choose the larger attempt ID. Keep learners with at least one attempt. | `learner_id, attempt_id`: (1, 103), (2, 105), (3, 107), (4, 109) |
+| 13 | LAG, gap calculation | Return attempts made more than one day after the same learner's immediately preceding attempt. Order each learner's attempts by date and ID before finding the prior row. | `attempt_id, gap_days`: (102, 2), (105, 2), (107, 2) |
+| 14 | DENSE_RANK, ties | Return every learner tied for the highest score in each workshop that has attempts. Return each learner once per workshop. | `workshop_id, learner_id, score`: (10, 1, 90), (20, 1, 85), (30, 3, 95), (30, 4, 95) |
+| 15 | Running sum, window frames | Make a queue from Ada's attempts ordered by date and ID. Return the last attempt within a 55-minute cumulative budget. | `attempt_id, cumulative_minutes`: (102, 55) |
+| 16 | Date windows, weighted logic | First sum minutes per day, then report the average daily total over the current day and the preceding two calendar days ending January 3–5. Assume the fixture covers all dates in that range. | `day, avg_daily_minutes`: (Jan 3, 41.67), (Jan 4, 63.33), (Jan 5, 51.67) |
+| 17 | UNION vs UNION ALL | Combine a list of learners who scored at least 85 with a list of learners who attempted a Django workshop. First return unique IDs, then keep one row per matching learner per list. | Unique: 1, 3, 4. With duplicates: 1, 3, 3, 4, 4 |
+| 18 | String cleanup and aggregation | Build a roster for each cohort with lowercase learner names in alphabetical order, separated by commas. Return an empty string for an empty cohort. | `cohort_id, roster`: (1, "ada,bina,eli"), (2, "chen,dara"), (3, "") |
+| 19 | Data changes and rollback | In a transaction, insert a second Filtering attempt for Bina, update its score to 88 and delete her older Filtering attempt. Verify the result and roll back. | Use ID 110 for the new row. Before rollback: (110, 88). After rollback: (104, 65). |
 
-Add rows for the edge cases before running each challenge. Keep solutions in each student's own `practice.sql`.
+Work through **01–03** before basic selects and joins, **04–08** before aggregation and grouping, **09–11** before subqueries, and **12–18** before advanced joins, ranking, date windows and string problems. Use **19** to practice data changes against a disposable database.
 
-## Completion criteria
+## Move to Part 2 when
 
-- Each student reviews the shared schema and can explain its relationships and constraints.
-- Each student submits their own `practice.sql` and `orm_examples.py`. For reads with a natural ORM equivalent, verify that SQL and ORM agree against the same sample data. Use direct SQL for database exercises such as DDL and views.
-- Demonstrate migrations on an empty database and show the edge cases in the fixtures.
-- Independently solve and explain one unseen Helpdesk query during review.
+- Each student has solved the original practice set independently and tested extra cases for nulls, ties and duplicate rows.
+- Each student has submitted all **50** study-plan problems under their own account and recorded **50 accepted results**.
+- Each student can explain a join, an aggregate and a window or subquery solution, then solve one unseen variation without a prepared answer.
