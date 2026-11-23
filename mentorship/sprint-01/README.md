@@ -30,6 +30,21 @@ W3Schools includes database-specific syntax. Compare SQL Server `TOP`, `IDENTITY
 5. Joining comments inflated the total estimated effort per agent. Explain why and correct the report.
 6. A queue query slows down as ticket count grows. Show its query plan and explain whether your index helped.
 
+## SQL 50-inspired Helpdesk challenges
+
+Use the existing Helpdesk schema and fixtures. Write PostgreSQL queries for the outputs below. The [LeetCode SQL 50 study plan](https://leetcode.com/studyplan/top-sql-50/) is a source of practice patterns.
+
+| Feature | Challenge and expected output | SQL pattern | Inspiration |
+| --- | --- | --- | --- |
+| F02 · Categories | List every category that has never received a ticket. Return category ID and name. Compare `NOT EXISTS` with a left join. | Anti-join | [Customers Who Never Order](https://leetcode.com/problems/customers-who-never-order/) |
+| F03 · Comments | For each ticket with comments, return the date of its first comment and the number of comments posted on that date. Include ties on the first date. | Grouped minimum, join back and aggregation | [Product Sales Analysis III](https://leetcode.com/problems/product-sales-analysis-iii/) |
+| F04 · SLA queue | Find open tickets created yesterday whose priority exceeds the priority of the previous ticket from the same requester. Exclude tickets with no predecessor. Find the predecessor before applying the date and status filters. Break timestamp ties by ticket ID. | `LAG()`, partitioning and filter order | [Rising Temperature](https://leetcode.com/problems/rising-temperature/) |
+| F05 · Agent workload | For every agent with assigned tickets, return the share of assigned tickets that are resolved, rounded to two decimals. Keep agents whose share is zero. | Conditional aggregation, decimal division and rounding | [Confirmation Rate](https://leetcode.com/problems/confirmation-rate/) |
+| F05 · Effort report | Return the second-highest **distinct** estimated effort across all tickets. Return one row with `NULL` if fewer than two distinct non-null values exist. | `DISTINCT`, scalar result and missing values | [Second Highest Salary](https://leetcode.com/problems/second-highest-salary/) |
+| F05 · Staffing | Ignore tickets with unknown effort. Order the open queue by priority descending, then creation time and ID ascending. With a 120-minute budget, return the last ticket in the longest prefix that fits, plus the cumulative effort at that point. | Running sum and deterministic ordering | [Last Person to Fit in the Bus](https://leetcode.com/problems/last-person-to-fit-in-the-bus/) |
+
+Add rows for the edge cases before running each challenge. Keep solutions in each student's own `practice.sql`.
+
 ## Completion criteria
 
 - Each student reviews the shared schema and can explain its relationships and constraints.
