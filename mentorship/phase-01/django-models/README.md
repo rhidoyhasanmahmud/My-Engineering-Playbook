@@ -107,3 +107,31 @@ Add these five reports in order. Start with a SQL query in PostgreSQL, then buil
 - Each student demos an end-to-end flow: open a ticket, find it in the queue, claim it, add a comment, resolve it and show the updated report.
 - Submit the ER diagram, models, migrations, repeatable sample data and tests. Each student writes their own SQL and ORM queries for the reports.
 - In review, explain how one screen uses the models and complete one new change independently. Example: add an optional due date and show overdue open tickets per agent, including agents with zero overdue tickets.
+
+## What you learned
+
+Use this table in your final review. For each row, point to an example in your own code or tests.
+
+| You can now | Where you used it |
+| --- | --- |
+| Choose fields, defaults and choices. Explain when to use `blank` or `null`. | Ticket form and optional effort · F01–F02 |
+| Link models and control what happens when related rows are deleted. | Agent profiles, tickets, comments and tags · F02–F03 |
+| Explain the difference between model validation and database constraints. | Blank titles, duplicate categories and negative estimates · F02–F03 |
+| Keep data consistent when a write fails or two people act at once. | Claiming and resolving tickets · F04 |
+| Write reusable QuerySets and explain bulk updates. | Queue filters and priority updates · F05 |
+| Build SQL and ORM reports with joins, counts, subqueries and window functions. | Support Reports · F06 |
+| Measure query counts and check whether an index helps. | Queue loading and query plans · F07 |
+| Change a schema and update data that already exists. | Ticket reference backfill · F01, F08 |
+| Create a custom field and a custom lookup. | Ticket reference and reference-year filter · F09–F10 |
+
+## What to learn next
+
+| Topic | What to practice later |
+| --- | --- |
+| Model inheritance | Compare abstract base models, multi-table inheritance and proxy models. |
+| Model signals | Try a lifecycle hook and compare it with putting the same action in an explicit function. |
+| Multiple databases and legacy schemas | Route queries between databases and connect Django to existing tables. |
+| PostgreSQL-specific features | Try full-text search and PostgreSQL-specific field or index types. |
+| More advanced ORM extensions | Write a custom transform or database function. Try running a parameterized raw query through Django. |
+
+These topics are follow-up practice. The Helpdesk project is complete when you can demonstrate and explain the features above.
