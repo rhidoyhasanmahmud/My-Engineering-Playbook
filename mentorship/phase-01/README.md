@@ -203,8 +203,6 @@ A spreadsheet has extra copies of the same registration and repeats cohort names
 
 **Learn:** least privilege, parameterized queries, encryption, backup and recovery, hosting basics and application connectivity.
 
-## Interview practice and completion
+## Next step
 
-- Complete the scenario queries independently. Keep the sample checks and add your own tests for nulls, empty groups, duplicate rows and ties.
-- After the scenarios, submit all **50** problems in [SQL 50](https://leetcode.com/studyplan/top-sql-50/) through your own account and record **50 accepted results**.
-- In review, explain a join, an aggregate and a window or subquery before solving one unseen variation. Then continue to [Part 2 — Django Models Project](django-models/README.md).
+Complete the 12 SQL scenarios and check your results against the sample data. Then continue directly to [Part 2 — Django Models Project](django-models/README.md).
