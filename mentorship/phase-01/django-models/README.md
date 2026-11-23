@@ -11,7 +11,7 @@ Build a small website where people can report a problem and support agents can f
 | **New Ticket** | Enter a title and description, choose a category and priority, and submit the ticket. |
 | **Ticket Queue** | Find open or unassigned tickets, filter the list, and search by ticket reference. |
 | **Ticket Detail** | See the requester and assignee, add comments and tags, claim or resolve the ticket, and read its status history. |
-| **Support Reports** | See ticket counts by category, resolution rates by agent and the first comment time for each ticket. |
+| **Support Reports** | See category counts, agent workload, ticket activity, backlog age and agent rankings. |
 
 Build the features below in order. Create categories, tags and demo accounts in Django admin or through sample data.
 
@@ -54,12 +54,23 @@ Build the features below in order. Create categories, tags and demo accounts in 
 - **Check your work:** Combine two filters and compare the ordered results with your SQL query. On sample tickets, also compare a loop using `save()` with one `QuerySet.update()` for the same priority change. Check the query count and whether the model's `save()` runs.
 - **Read:** [Queries and Q objects](https://docs.djangoproject.com/en/6.1/topics/db/queries/) · [Managers](https://docs.djangoproject.com/en/6.1/topics/db/managers/) · [Bulk updates](https://docs.djangoproject.com/en/6.1/ref/models/querysets/#update)
 
-### F06 · Show support reports
+### F06 · Build the Support Reports page
 
-- **Build in the UI:** On **Support Reports**, show the ticket count for each category, the percentage of assigned tickets each agent has resolved, and the time of the first comment on each ticket.
-- **Learn with Django models:** Use aggregation, filtered counts and expressions. Try a subquery for the first comment time.
-- **Check your work:** Show a category with zero tickets and an agent with assigned tickets but zero resolutions. Show a dash for tickets without comments. Compare all three reports with raw SQL.
-- **Read:** [Aggregation](https://docs.djangoproject.com/en/6.1/topics/db/aggregation/) · [Expressions and subqueries](https://docs.djangoproject.com/en/6.1/ref/models/expressions/)
+Add these five reports in order. Start with a SQL query in PostgreSQL, then build the Django ORM version and show its results in a simple table. Use the same sample data to check that both versions agree.
+
+| Report | What the screen should show | Query practice and checks |
+| --- | --- | --- |
+| **R01 · Tickets by category** | Show every category with its total, open and resolved ticket counts. | Use an outer join, grouping and conditional counts. A category with no tickets must appear with three zeroes. |
+| **R02 · Agent workload and resolution rate** | For every agent, show assigned, open and resolved ticket counts. Show `resolved ÷ assigned × 100` when the agent has assignments. | Use filtered aggregates and decimal division. An agent with assignments but no resolutions shows `0%`. An agent with no assignments shows a dash for the rate. Unassigned tickets do not belong to any agent. |
+| **R03 · Ticket activity** | Show each ticket's first comment time and author, comment count and tag count. If two comments have the same time, use the smaller comment ID as the first comment. | Use an ordered subquery for the first comment and distinct counts or separate aggregates to avoid counting the same row twice. A ticket with two comments and three tags must show `2` and `3`, not `6` and `6`. Keep tickets with no activity. |
+| **R04 · Open backlog by age** | Show open ticket counts by category in three age groups: `0–2 days`, `3–6 days` and `7+ days`. Count age in calendar days from the ticket's creation date to today. | Use date comparisons and conditional counts. Freeze today's date in the test and include tickets exactly 2, 3, 6 and 7 days old. Resolved tickets must stay out of the count. |
+| **R05 · Top agents in each category** | Within each category, rank current assignees by their resolved ticket count. Show ranks 1–3 and keep all ties. | Group by category and agent first, then use a window function with `DENSE_RANK` within each category. In one category, counts of `5, 4, 4, 3, 2` should show ranks `1, 2, 2, 3` for the first four agents. |
+
+**Models you will query:** `Category`, `Ticket`, `AgentProfile`, `Comment` and `TicketTag`.
+
+**Review check:** Each student submits their own SQL and ORM queries for all five reports. In the review, explain why an inner join loses empty categories, why joining comments and tags can inflate counts, and why ties can produce more than three rows for a category.
+
+**Read:** [Aggregation and filtered counts](https://docs.djangoproject.com/en/6.1/topics/db/aggregation/) · [Query expressions, subqueries and windows](https://docs.djangoproject.com/en/6.1/ref/models/expressions/) · [Window functions](https://docs.djangoproject.com/en/6.1/ref/models/database-functions/#window-functions)
 
 ### F07 · Keep the queue fast
 
