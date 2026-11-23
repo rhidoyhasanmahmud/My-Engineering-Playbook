@@ -2,7 +2,20 @@
 
 A requester opens a ticket and chooses a category. An agent claims the ticket, adds comments and resolves it. A support lead can see the queue, check agent workload and find old tickets by their reference codes.
 
-Build the **data layer** in Django and PostgreSQL. Demonstrate each feature in the Django shell or with tests. Complete [Part 1 — SQL practice](../README.md) first. Work through the features at your own pace using the [Django model-layer docs](https://docs.djangoproject.com/en/6.1/#the-model-layer) for your installed Django version.
+Use Django and PostgreSQL for the data layer, with Django views, forms and templates for a simple server-rendered UI. The UI lets you try the features in a browser. The main learning goal is **Django models, ORM queries, constraints and migrations**.
+
+Complete [Part 1 — SQL practice](../README.md) first. Work at your own pace using the [Django model-layer docs](https://docs.djangoproject.com/en/6.1/#the-model-layer) for your installed Django version.
+
+## UI scope
+
+| Screen | What it demonstrates |
+| --- | --- |
+| **New ticket** | Submit a ticket form with a category, title, description and priority. Show field validation errors. |
+| **Agent queue** | List and filter tickets by status, priority and reference year. The filters use the QuerySet methods and the custom lookup. |
+| **Ticket detail** | View the ticket, tags, comments and status history. Add a comment, claim an unassigned ticket and resolve it. |
+| **Support reports** | Show ticket counts by category, resolution rates by agent and first comment times using the ORM report queries. |
+
+Use plain templates and basic styling. Add related data through fixtures or Django admin as needed. Review data behavior with tests or shell checks, then demo the flow in the browser.
 
 ## 1. Build the data model
 
@@ -72,6 +85,7 @@ Build the **data layer** in Django and PostgreSQL. Demonstrate each feature in t
 
 ## Finish and review
 
+- Demo one ticket end to end in the browser: create it, find it in the queue, claim it, add a comment and resolve it. Show that the new status appears in the report.
 - Share one Helpdesk schema and review each other's pull requests. Rotate feature ownership so both students work with models, migrations and queries.
 - Submit an ER diagram, reproducible sample data, migrations, model tests and SQL/ORM examples for the reports. Each student submits their own report queries.
 - In review, explain one modeling decision and solve one unseen change independently. Example: add an optional due date and report overdue open tickets per agent, including agents with zero overdue tickets.
