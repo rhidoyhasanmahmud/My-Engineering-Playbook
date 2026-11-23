@@ -1,91 +1,98 @@
 # Phase 01 · Part 2 — Build a Helpdesk with Django Models
 
-A requester opens a ticket and chooses a category. An agent claims the ticket, adds comments and resolves it. A support lead can see the queue, check agent workload and find old tickets by their reference codes.
+Build a small website where people can report a problem and support agents can fix it. For example, a user opens a ticket called **“I cannot log in.”** An agent finds it in the queue, claims it, adds a comment and marks it as resolved. The support report then shows the ticket as resolved.
 
-Use Django and PostgreSQL for the data layer, with Django views, forms and templates for a simple server-rendered UI. The UI lets you try the features in a browser. The main learning goal is **Django models, ORM queries, constraints and migrations**.
+**Your main goal is to learn Django models and the ORM.** Each screen gives you a reason to design a model, write a query or enforce a data rule. Use PostgreSQL with simple Django views, forms and templates. Complete [Part 1 — SQL practice](../README.md) first. Use the [Django model-layer docs](https://docs.djangoproject.com/en/6.1/#the-model-layer) for your installed version.
 
-Complete [Part 1 — SQL practice](../README.md) first. Work at your own pace using the [Django model-layer docs](https://docs.djangoproject.com/en/6.1/#the-model-layer) for your installed Django version.
+## What you will build
 
-## UI scope
-
-| Screen | What it demonstrates |
+| Screen | What someone can do |
 | --- | --- |
-| **New ticket** | Submit a ticket form with a category, title, description and priority. Show field validation errors. |
-| **Agent queue** | List and filter tickets by status, priority and reference year. The filters use the QuerySet methods and the custom lookup. |
-| **Ticket detail** | View the ticket, tags, comments and status history. Add a comment, claim an unassigned ticket and resolve it. |
-| **Support reports** | Show ticket counts by category, resolution rates by agent and first comment times using the ORM report queries. |
+| **New Ticket** | Enter a title and description, choose a category and priority, and submit the ticket. |
+| **Ticket Queue** | Find open or unassigned tickets, filter the list, and search by ticket reference. |
+| **Ticket Detail** | See the requester and assignee, add comments and tags, claim or resolve the ticket, and read its status history. |
+| **Support Reports** | See ticket counts by category, resolution rates by agent and the first comment time for each ticket. |
 
-Use plain templates and basic styling. Add related data through fixtures or Django admin as needed. Review data behavior with tests or shell checks, then demo the flow in the browser.
+Build the features below in order. Create categories, tags and demo accounts in Django admin or through sample data.
 
-## 1. Build the data model
+## 1. Create tickets and connect related data
 
 ### F01 · Open a ticket
 
-- **Build:** Create `Ticket` and `Category`. Each ticket has a requester, category, title, description, status, priority and timestamps. Use Django's configured user model for the requester.
-- **Verify:** Run the migrations on an empty PostgreSQL database. Create a ticket in the shell and use `sqlmigrate` to identify its table, primary key and foreign keys.
-- **Read:** [Model fields and defaults](https://docs.djangoproject.com/en/6.1/ref/models/fields/) · [Migrations](https://docs.djangoproject.com/en/6.1/topics/migrations/)
+- **Build in the UI:** Make the **New Ticket** form. After a successful submission, open the new ticket's detail page. Set the requester from the logged-in user.
+- **Learn with Django models:** Create `Ticket` and `Category`. Choose field types, status and priority choices, defaults, timestamps and foreign keys. Create and run migrations.
+- **Check your work:** Submit a valid ticket, reload its detail page and confirm the data is still there. Use `sqlmigrate` to find the table, primary key and foreign keys.
+- **Read:** [Model fields](https://docs.djangoproject.com/en/6.1/ref/models/fields/) · [Migrations](https://docs.djangoproject.com/en/6.1/topics/migrations/)
 
-### F02 · Assign a ticket and enforce data rules
+### F02 · Show who owns a ticket
 
-- **Build:** Add an `AgentProfile` linked one-to-one to a user. Allow an optional assignee and estimated effort in minutes. Enforce unique category names and reject negative estimates at database level.
-- **Verify:** Save an unassigned ticket. Compare what happens to a blank title with `full_clean()` and with a direct `save()`. Verify that PostgreSQL rejects duplicate category names and negative estimates.
+- **Build in the UI:** On **Ticket Detail**, show the agent's name or **Unassigned**. Add an optional estimated effort in minutes. Show a clear error if the estimate is negative.
+- **Learn with Django models:** Link `AgentProfile` one-to-one with a user and link the optional assignee to the ticket. Use database constraints for unique category names and nonnegative estimates. Learn how `blank` differs from `null`.
+- **Check your work:** Save a ticket with no assignee and no estimate. Test a blank title with `full_clean()` and with direct `save()`. Test that PostgreSQL rejects a negative estimate or a duplicate category even when the form is bypassed.
 - **Read:** [Relationships](https://docs.djangoproject.com/en/6.1/topics/db/models/#relationships) · [Model validation](https://docs.djangoproject.com/en/6.1/ref/models/instances/#validating-objects) · [Constraints](https://docs.djangoproject.com/en/6.1/ref/models/constraints/)
 
 ### F03 · Add comments and tags
 
-- **Build:** A ticket has many comments and tags. Use `TicketTag` to store who added each tag and when. Prevent duplicate ticket/tag pairs.
-- **Verify:** List tags from a ticket and tickets from a tag. Test that deleting a ticket removes its comments (`CASCADE`), deleting an assigned agent profile clears the assignee (`SET_NULL`), and deleting a category in use is blocked (`PROTECT`).
-- **Read:** [Many-to-many through models](https://docs.djangoproject.com/en/6.1/topics/db/models/#extra-fields-on-many-to-many-relationships) · [ForeignKey and deletion behavior](https://docs.djangoproject.com/en/6.1/ref/models/fields/#foreignkey)
+- **Build in the UI:** On **Ticket Detail**, add a comment and see it in the comment list. Attach an existing tag and show when and by whom it was added.
+- **Learn with Django models:** A ticket has many comments and many tags. Use a `TicketTag` through model to store the tag assignment details. Use reverse relations and a unique constraint for each ticket/tag pair.
+- **Check your work:** Add the same tag twice and confirm only one link exists. Test that deleting a ticket removes its comments (`CASCADE`), deleting its assignee clears the assignment (`SET_NULL`), and deleting a category in use is blocked (`PROTECT`).
+- **Read:** [Many-to-many through models](https://docs.djangoproject.com/en/6.1/topics/db/models/#extra-fields-on-many-to-many-relationships) · [ForeignKey and delete rules](https://docs.djangoproject.com/en/6.1/ref/models/fields/#foreignkey)
 
-## 2. Run the support workflow and reports
+## 2. Run the support queue and reports
 
-### F04 · Claim and resolve tickets safely
+### F04 · Claim and resolve a ticket
 
-- **Build:** Let an agent claim an unassigned ticket. When a ticket is resolved, update its status and add a `StatusChange` entry in the same transaction.
-- **Verify:** If writing the history fails, the status stays unchanged. Simulate two agents claiming the same ticket through separate database transactions. Exactly one claim succeeds. Explain your choice of a conditional update or row locking.
+- **Build in the UI:** Add **Claim** and **Resolve** actions on **Ticket Detail**. Claim assigns an unassigned ticket to the current agent. Resolve updates the status and adds an entry to the status history.
+- **Learn with Django models:** Use a conditional update or row locking for claims. Use a transaction for the status update and its `StatusChange` record.
+- **Check your work:** Have two agents try to claim the same ticket. Exactly one succeeds, and the other sees a clear message. If saving the history fails, the ticket stays in its previous status.
 - **Read:** [Transactions](https://docs.djangoproject.com/en/6.1/topics/db/transactions/) · [QuerySet updates and locking](https://docs.djangoproject.com/en/6.1/ref/models/querysets/)
 
-### F05 · Find work in the queue
+### F05 · Filter the queue
 
-- **Build:** Add reusable QuerySet methods for open tickets, unassigned tickets and an agent's queue. Combine them with priority and date filters. Break sorting ties with ticket ID.
-- **Verify:** Match the ordered ticket IDs against a SQL query. On test rows, compare query counts and model `save()` behavior for a per-ticket save loop and a bulk `QuerySet.update()`.
-- **Read:** [QuerySets and Q objects](https://docs.djangoproject.com/en/6.1/topics/db/queries/) · [Custom managers](https://docs.djangoproject.com/en/6.1/topics/db/managers/) · [QuerySet.update()](https://docs.djangoproject.com/en/6.1/ref/models/querysets/#update)
+- **Build in the UI:** On **Ticket Queue**, let an agent show open tickets, unassigned tickets or their own tickets. Add priority and date filters. Show the newest tickets first, using ticket ID to break ties.
+- **Learn with Django models:** Write reusable QuerySet methods and combine conditions with `Q` objects. Use a manager to expose the queue methods.
+- **Check your work:** Combine two filters and compare the ordered results with your SQL query. On sample tickets, also compare a loop using `save()` with one `QuerySet.update()` for the same priority change. Check the query count and whether the model's `save()` runs.
+- **Read:** [Queries and Q objects](https://docs.djangoproject.com/en/6.1/topics/db/queries/) · [Managers](https://docs.djangoproject.com/en/6.1/topics/db/managers/) · [Bulk updates](https://docs.djangoproject.com/en/6.1/ref/models/querysets/#update)
 
-### F06 · Report on workload and response
+### F06 · Show support reports
 
-- **Build:** Report ticket count per category, resolved share per agent with assigned tickets, and first comment time per ticket. Treat a ticket with no comments as having no first comment time.
-- **Verify:** SQL and ORM return the same results. Include an empty category and an agent with assigned tickets and zero resolutions.
-- **Read:** [Aggregation and filtered counts](https://docs.djangoproject.com/en/6.1/topics/db/aggregation/) · [Expressions and subqueries](https://docs.djangoproject.com/en/6.1/ref/models/expressions/)
+- **Build in the UI:** On **Support Reports**, show the ticket count for each category, the percentage of assigned tickets each agent has resolved, and the time of the first comment on each ticket.
+- **Learn with Django models:** Use aggregation, filtered counts and expressions. Try a subquery for the first comment time.
+- **Check your work:** Show a category with zero tickets and an agent with assigned tickets but zero resolutions. Show a dash for tickets without comments. Compare all three reports with raw SQL.
+- **Read:** [Aggregation](https://docs.djangoproject.com/en/6.1/topics/db/aggregation/) · [Expressions and subqueries](https://docs.djangoproject.com/en/6.1/ref/models/expressions/)
 
-### F07 · Measure and improve queue performance
+### F07 · Keep the queue fast
 
-- **Build:** Load queue rows with their requester, assignee, category, tags and comments. Try an index for a filter that the queue actually uses.
-- **Verify:** Record query counts before and after using `select_related()` and `prefetch_related()`. Compare query plans before and after adding the index and explain the planner's choice.
+- **Build in the UI:** Show the requester, assignee, category and tags on each queue row. On **Ticket Detail**, show comments with their authors.
+- **Learn with Django models:** Use `select_related()` for single related objects and `prefetch_related()` for related lists. Try an index for a filter the queue uses.
+- **Check your work:** Render the same page before and after optimizing and compare query counts. Load more ticket rows and check whether queries grow with the number of rows. Use `explain()` on the indexed filter and explain the plan.
 - **Read:** [Database optimization](https://docs.djangoproject.com/en/6.1/topics/db/optimization/) · [Model indexes](https://docs.djangoproject.com/en/6.1/ref/models/indexes/)
 
-## 3. Evolve the schema and extend the ORM
+## 3. Add references and extend the ORM
 
-### F08 · Give existing tickets a reference code
+### F08 · Give every ticket a reference
 
-- **Build:** Add a nullable reference field, backfill unique codes such as `HD-2026-000123` in a data migration, then make the field required and unique.
-- **Verify:** Migrate both a clean database and one already containing tickets. Check that every existing ticket gets a distinct reference and that new tickets require one.
+- **Build in the UI:** Show a reference such as `HD-2026-000123` on both **Ticket Queue** and **Ticket Detail**, including tickets created before this feature.
+- **Learn with Django models:** Add a nullable field, fill in unique references for old rows in a data migration, then require unique references for all tickets. Make sure new tickets get a reference when saved.
+- **Check your work:** Migrate a clean database and one with old tickets. Open an old ticket and a newly created ticket in the browser and check that both show valid, different references.
 - **Read:** [Data migrations and historical models](https://docs.djangoproject.com/en/6.1/topics/migrations/#data-migrations) · [RunPython](https://docs.djangoproject.com/en/6.1/ref/migration-operations/#runpython)
 
-### F09 · Create a custom ticket reference field
+### F09 · Search by an exact reference
 
-- **Build:** Replace the plain field with `TicketReferenceField`. Keep the PostgreSQL value as text and return a `TicketReference` object when loading it in Python.
-- **Verify:** Check that existing codes survive the migration, valid codes save and load correctly, invalid codes fail validation, and exact filters work. Rebuild the database from migrations.
-- **Read:** [Custom model fields: conversion, database preparation and deconstruction](https://docs.djangoproject.com/en/6.1/howto/custom-model-fields/)
+- **Build in the UI:** Add an exact reference search to **Ticket Queue**. A valid existing reference finds one ticket. Show a helpful error for a bad format and an empty result for a valid reference that does not exist.
+- **Learn with Django models:** Use a custom `TicketReferenceField`. Keep the database value as text and return a `TicketReference` object when Django loads it. Use the same reference validation rule for the search form.
+- **Check your work:** Test saving, reloading and filtering with an exact reference. Confirm that older reference codes still work and the custom field can be rebuilt from migrations.
+- **Read:** [Custom model fields](https://docs.djangoproject.com/en/6.1/howto/custom-model-fields/)
 
-### F10 · Filter ticket references by year
+### F10 · Filter references by year
 
-- **Build:** Register a custom `code_year` lookup on `TicketReferenceField`. Support `Ticket.objects.filter(reference_code__code_year=2026)` using the year embedded in the reference code.
-- **Verify:** Use references from multiple years, compare results with parameterized PostgreSQL, and chain the lookup with a status filter. Test a malformed year and a valid year with no matches.
-- **Read:** [Custom lookups and SQL parameters](https://docs.djangoproject.com/en/6.1/howto/custom-lookups/)
+- **Build in the UI:** Add a **Reference Year** filter to **Ticket Queue**. Choosing 2026 shows tickets whose reference code contains that year. The filter works together with the status filter.
+- **Learn with Django models:** Register a custom `code_year` lookup on `TicketReferenceField`. The view calls `reference_code__code_year=2026`. Pass the year to SQL as a parameter.
+- **Check your work:** Use tickets from two years. Check that the UI and raw PostgreSQL return the same IDs. Test a malformed year and a valid year with no matches.
+- **Read:** [Custom lookups](https://docs.djangoproject.com/en/6.1/howto/custom-lookups/)
 
 ## Finish and review
 
-- Demo one ticket end to end in the browser: create it, find it in the queue, claim it, add a comment and resolve it. Show that the new status appears in the report.
-- Share one Helpdesk schema and review each other's pull requests. Rotate feature ownership so both students work with models, migrations and queries.
-- Submit an ER diagram, reproducible sample data, migrations, model tests and SQL/ORM examples for the reports. Each student submits their own report queries.
-- In review, explain one modeling decision and solve one unseen change independently. Example: add an optional due date and report overdue open tickets per agent, including agents with zero overdue tickets.
+- Each student demos an end-to-end flow: open a ticket, find it in the queue, claim it, add a comment, resolve it and show the updated report.
+- Submit the ER diagram, models, migrations, repeatable sample data and tests. Each student writes their own SQL and ORM queries for the reports.
+- In review, explain how one screen uses the models and complete one new change independently. Example: add an optional due date and show overdue open tickets per agent, including agents with zero overdue tickets.
