@@ -1,23 +1,38 @@
-# Sprint 1 — Django Models and PostgreSQL
+# Phase 01 — Django Models and PostgreSQL
 
 **Project:** Helpdesk Ticket System  
-**Duration:** Two weeks
+**Goal:** Build the Helpdesk data layer and use it to practice Django models, PostgreSQL and interview-style SQL. Each student moves to Phase 02 after completing the checks below.
 
-Build the data layer for the Helpdesk. Use Django shell and PostgreSQL to verify the features during this sprint. These models will support the REST API in Sprint 2.
+Use the [W3Schools SQL tutorial](https://www.w3schools.com/sql/) as a topic checklist. Run exercises in PostgreSQL and follow its syntax, such as `LIMIT` for the tutorial's SELECT TOP topic. Use Django shell for ORM practice and a disposable PostgreSQL database for DDL and destructive exercises.
 
-| Feature | Build | Learn and reference | Done when |
-| --- | --- | --- | --- |
-| **F01 — Record a ticket** | Save a ticket with a title, status, requester and creation time. Link the requester to Django's user model. | Field types, choices, foreign keys and migrations. [Model fields](https://docs.djangoproject.com/en/6.1/ref/models/fields/) · [Migrations](https://docs.djangoproject.com/en/6.1/topics/migrations/) | Migrations run on an empty PostgreSQL database. You can save a ticket and identify the requester foreign key in the SQL shown by `sqlmigrate`. |
-| **F02 — Categorize tickets** | Create categories with unique names. Assign each ticket to a category. | One-to-many relationships, reverse lookups and uniqueness. [Many-to-one relationships](https://docs.djangoproject.com/en/6.1/topics/db/examples/many_to_one/) · [Unique fields](https://docs.djangoproject.com/en/6.1/ref/models/fields/#unique) | One category can have several tickets. PostgreSQL rejects duplicate category names. |
-| **F03 — Add a comment** | Save a comment linked to its ticket and author. | Reverse relationships, `related_name` and `on_delete`. [Related objects](https://docs.djangoproject.com/en/6.1/topics/db/queries/#related-objects) · [ForeignKey](https://docs.djangoproject.com/en/6.1/ref/models/fields/#foreignkey) | You can list all comments for a ticket and explain your chosen behavior when its ticket or author is deleted. |
-| **F04 — List recent open tickets** | Return the latest 10 open tickets with requester and category. Use the ticket ID to break ties on creation time. | SQL `WHERE`, `JOIN`, `ORDER BY` and `LIMIT`. ORM filtering, ordering and `select_related()`. [PostgreSQL SELECT](https://www.postgresql.org/docs/current/sql-select.html) · [Django QuerySets](https://docs.djangoproject.com/en/6.1/ref/models/querysets/) | The SQL and ORM versions return the same tickets in the same order. |
-| **F05 — Report on tickets and categories** | Count comments per ticket, including tickets with zero comments. List categories with at least three tickets. | `LEFT JOIN`, `COUNT`, `GROUP BY` and `HAVING`. Django `annotate()` and `Count()`. [PostgreSQL Joins](https://www.postgresql.org/docs/current/tutorial-join.html) · [PostgreSQL Aggregates](https://www.postgresql.org/docs/current/tutorial-agg.html) · [Django Aggregation](https://docs.djangoproject.com/en/6.1/topics/db/aggregation/) | Both reports match between SQL and ORM. A ticket without comments appears with a count of zero. |
+## Feature and learning map
 
-## Weekly work
+| Feature to build | Django practice | PostgreSQL practice |
+| --- | --- | --- |
+| **F01 · Record a ticket** with title, status, requester and creation time | Fields, choices, defaults, user foreign key and migrations. [Model fields](https://docs.djangoproject.com/en/6.1/ref/models/fields/) · [Migrations](https://docs.djangoproject.com/en/6.1/topics/migrations/) | Read generated DDL with `sqlmigrate`. In a scratch schema, create a practice table, add a column, insert rows, update one status, delete one seed row, then reset the table. [DDL](https://www.postgresql.org/docs/current/ddl.html) · [Data manipulation](https://www.postgresql.org/docs/current/dml.html) · [TRUNCATE](https://www.postgresql.org/docs/current/sql-truncate.html) |
+| **F02 · Categorize and assign tickets** with an optional agent | Foreign keys, reverse relations, nullable fields, `on_delete` and constraints. [Relationships](https://docs.djangoproject.com/en/6.1/topics/db/examples/many_to_one/) · [Constraints](https://docs.djangoproject.com/en/6.1/ref/models/constraints/) | Verify primary and foreign keys, unique category names, required fields, defaults and a status check constraint. List unassigned tickets using `IS NULL`; show requester and assigned agent by joining the user table twice. [Constraints](https://www.postgresql.org/docs/current/ddl-constraints.html) · [Joins](https://www.postgresql.org/docs/current/tutorial-join.html) |
+| **F03 · Store comments and build a ticket timeline** | Reverse lookups, `on_delete`, related loading and combining query results. [Making queries](https://docs.djangoproject.com/en/6.1/topics/db/queries/) · [QuerySet API](https://docs.djangoproject.com/en/6.1/ref/models/querysets/) | Retrieve comments with author aliases. Combine ticket creation and comments into one timeline using `UNION ALL`; compare with `UNION`. [Combining queries](https://www.postgresql.org/docs/current/queries-union.html) |
+| **F04 · Search and filter the ticket queue** | Field lookups, `Q` objects, stable ordering, slicing and a composite index. [Making queries](https://docs.djangoproject.com/en/6.1/topics/db/queries/) · [Model indexes](https://docs.djangoproject.com/en/6.1/ref/models/indexes/) | Search titles with `LIKE` or PostgreSQL `ILIKE`; combine status, priority and date filters using `AND`, `OR`, `NOT`, `IN` and a date range. Practice `DISTINCT`, `ORDER BY` and `LIMIT`. Compare plans with `EXPLAIN` before and after indexing. [SELECT](https://www.postgresql.org/docs/current/sql-select.html) · [Pattern matching](https://www.postgresql.org/docs/current/functions-matching.html) · [EXPLAIN](https://www.postgresql.org/docs/current/using-explain.html) |
+| **F05 · Report on category and agent workload** | `annotate()`, filtered aggregations, `Exists`, `Subquery`, `Case` and `Coalesce`. [Aggregation](https://docs.djangoproject.com/en/6.1/topics/db/aggregation/) · [Expressions](https://docs.djangoproject.com/en/6.1/ref/models/expressions/) · [Database functions](https://docs.djangoproject.com/en/6.1/ref/models/database-functions/) | Use `LEFT JOIN` and `COUNT` to include empty categories. Use `GROUP BY` and `HAVING` for categories with at least three tickets. Report `MIN`, `MAX`, `SUM` and `AVG` of estimated effort by agent. Find categories without open tickets using `NOT EXISTS`. Use `CASE` for workload labels, `COALESCE` for missing totals and a view for the workload report. [Aggregate functions](https://www.postgresql.org/docs/current/functions-aggregate.html) · [Subqueries](https://www.postgresql.org/docs/current/functions-subquery.html) · [Conditional expressions](https://www.postgresql.org/docs/current/functions-conditional.html) · [Views](https://www.postgresql.org/docs/current/sql-createview.html) |
 
-- **Week 1 · F01–F03.** One student owns Ticket and Category. The other owns Comment and sample data. Review each other's PRs. Seed data with a ticket without comments, a category without tickets and a category with at least three tickets.
-- **Week 2 · F04–F05.** Each student independently writes `practice.sql` and `orm_examples.py` against the same sample data.
+Use fixtures with an empty category, an unassigned ticket, a ticket with zero comments, multiple comments on one ticket, and two tickets with the same timestamp. Give tickets a priority and an optional estimated effort in minutes for queue and reporting exercises.
 
-## Sprint review
+For the remaining W3Schools join and subquery topics, use the same dataset. Compare `RIGHT JOIN` with an equivalent `LEFT JOIN`; compare two agent queues with `FULL OUTER JOIN`; find pairs of tickets from the same requester with a self join; find agents whose ticket exceeds every estimate in a comparison set with `> ALL`, and repeat with `> ANY`. Use `INSERT INTO ... SELECT` and `CREATE TABLE ... AS SELECT` to copy a report into a scratch snapshot. [Table expressions](https://www.postgresql.org/docs/current/queries-table-expressions.html) · [Subqueries](https://www.postgresql.org/docs/current/functions-subquery.html) · [INSERT](https://www.postgresql.org/docs/current/sql-insert.html) · [CREATE TABLE AS](https://www.postgresql.org/docs/current/sql-createtableas.html)
 
-Show the ER diagram, models, migrations, sample data and query results. Each student gets the same live task: **Find categories with no tickets using both SQL and the Django ORM. Explain why an inner join would omit those categories.**
+W3Schools includes database-specific syntax. Compare SQL Server `TOP`, `IDENTITY`, `SELECT INTO` and stored procedures with PostgreSQL equivalents. Practice PostgreSQL identity columns and write a small read-only procedure exercise that reports how many open tickets a given agent has. [Identity columns](https://www.postgresql.org/docs/current/ddl-identity-columns.html) · [CREATE PROCEDURE](https://www.postgresql.org/docs/current/sql-createprocedure.html)
+
+## Interview practice
+
+1. List every ticket and its comment count. Why does `COUNT(*)` give the wrong result for some tickets after a left join?
+2. Find requesters with at least three open tickets created in the last 30 days. Which condition belongs in `WHERE` and which belongs in `HAVING`?
+3. Return the latest ticket per requester, breaking ties by ticket ID. Solve it with a window function or PostgreSQL `DISTINCT ON`. [Window functions](https://www.postgresql.org/docs/current/tutorial-window.html) · [SELECT](https://www.postgresql.org/docs/current/sql-select.html)
+4. Find categories without open tickets. What happens to a `NOT IN` check if its subquery returns a null?
+5. Joining comments inflated the total estimated effort per agent. Explain why and correct the report.
+6. A queue query slows down as ticket count grows. Show its query plan and explain whether your index helped.
+
+## Completion criteria
+
+- Each student reviews the shared schema and can explain its relationships and constraints.
+- Each student submits their own `practice.sql` and `orm_examples.py`. For reads with a natural ORM equivalent, verify that SQL and ORM agree against the same sample data. Use direct SQL for database exercises such as DDL and views.
+- Demonstrate migrations on an empty database and show the edge cases in the fixtures.
+- Independently solve and explain one unseen Helpdesk query during review.
