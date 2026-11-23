@@ -112,26 +112,26 @@ Add these five reports in order. Start with a SQL query in PostgreSQL, then buil
 
 Use this table in your final review. For each row, point to an example in your own code or tests.
 
-| You can now | Where you used it |
-| --- | --- |
-| Choose fields, defaults and choices. Explain when to use `blank` or `null`. | Ticket form and optional effort · F01–F02 |
-| Link models and control what happens when related rows are deleted. | Agent profiles, tickets, comments and tags · F02–F03 |
-| Explain the difference between model validation and database constraints. | Blank titles, duplicate categories and negative estimates · F02–F03 |
-| Keep data consistent when a write fails or two people act at once. | Claiming and resolving tickets · F04 |
-| Write reusable QuerySets and explain bulk updates. | Queue filters and priority updates · F05 |
-| Build SQL and ORM reports with joins, counts, subqueries and window functions. | Support Reports · F06 |
-| Measure query counts and check whether an index helps. | Queue loading and query plans · F07 |
-| Change a schema and update data that already exists. | Ticket reference backfill · F01, F08 |
-| Create a custom field and a custom lookup. | Ticket reference and reference-year filter · F09–F10 |
+| You can now | Where you used it | Official Django docs |
+| --- | --- | --- |
+| Choose fields, defaults and choices. Explain when to use `blank` or `null`. | Ticket form and optional effort · F01–F02 | [Model fields](https://docs.djangoproject.com/en/6.1/ref/models/fields/) |
+| Link models and control what happens when related rows are deleted. | Agent profiles, tickets, comments and tags · F02–F03 | [Relationships](https://docs.djangoproject.com/en/6.1/topics/db/models/#relationships) · [ForeignKey and on_delete](https://docs.djangoproject.com/en/6.1/ref/models/fields/#foreignkey) |
+| Explain the difference between model validation and database constraints. | Blank titles, duplicate categories and negative estimates · F02–F03 | [Model validation](https://docs.djangoproject.com/en/6.1/ref/models/instances/#validating-objects) · [Constraints](https://docs.djangoproject.com/en/6.1/ref/models/constraints/) |
+| Keep data consistent when a write fails or two people act at once. | Claiming and resolving tickets · F04 | [Transactions](https://docs.djangoproject.com/en/6.1/topics/db/transactions/) · [QuerySet updates and locking](https://docs.djangoproject.com/en/6.1/ref/models/querysets/) |
+| Write reusable QuerySets and explain bulk updates. | Queue filters and priority updates · F05 | [Managers](https://docs.djangoproject.com/en/6.1/topics/db/managers/) · [Bulk updates](https://docs.djangoproject.com/en/6.1/ref/models/querysets/#update) |
+| Build SQL and ORM reports with joins, counts, subqueries and window functions. | Support Reports · F06 | [Aggregation](https://docs.djangoproject.com/en/6.1/topics/db/aggregation/) · [Subqueries and windows](https://docs.djangoproject.com/en/6.1/ref/models/expressions/) |
+| Measure query counts and check whether an index helps. | Queue loading and query plans · F07 | [Database optimization](https://docs.djangoproject.com/en/6.1/topics/db/optimization/) · [Indexes](https://docs.djangoproject.com/en/6.1/ref/models/indexes/) |
+| Change a schema and update data that already exists. | Ticket reference backfill · F01, F08 | [Migrations](https://docs.djangoproject.com/en/6.1/topics/db/migrations/) · [Data migrations](https://docs.djangoproject.com/en/6.1/topics/db/migrations/#data-migrations) |
+| Create a custom field and a custom lookup. | Ticket reference and reference-year filter · F09–F10 | [Custom fields](https://docs.djangoproject.com/en/6.1/howto/custom-model-fields/) · [Custom lookups](https://docs.djangoproject.com/en/6.1/howto/custom-lookups/) |
 
 ## What to learn next
 
-| Topic | What to practice later |
-| --- | --- |
-| Model inheritance | Compare abstract base models, multi-table inheritance and proxy models. |
-| Model signals | Try a lifecycle hook and compare it with putting the same action in an explicit function. |
-| Multiple databases and legacy schemas | Route queries between databases and connect Django to existing tables. |
-| PostgreSQL-specific features | Try full-text search and PostgreSQL-specific field or index types. |
-| More advanced ORM extensions | Write a custom transform or database function. Try running a parameterized raw query through Django. |
+| Topic | What to practice later | Official Django docs |
+| --- | --- | --- |
+| Model inheritance | Compare abstract base models, multi-table inheritance and proxy models. | [Model inheritance](https://docs.djangoproject.com/en/6.1/topics/db/models/#model-inheritance) |
+| Model signals | Try a lifecycle hook and compare it with putting the same action in an explicit function. | [Model signals](https://docs.djangoproject.com/en/6.1/ref/signals/#model-signals) |
+| Multiple databases and legacy schemas | Route queries between databases and connect Django to existing tables. | [Multiple databases](https://docs.djangoproject.com/en/6.1/topics/db/multi-db/) · [Legacy databases](https://docs.djangoproject.com/en/6.1/howto/legacy-databases/) |
+| PostgreSQL-specific features | Try full-text search and PostgreSQL-specific field or index types. | [Full-text search](https://docs.djangoproject.com/en/6.1/ref/contrib/postgres/search/) · [PostgreSQL fields](https://docs.djangoproject.com/en/6.1/ref/contrib/postgres/fields/) · [PostgreSQL indexes](https://docs.djangoproject.com/en/6.1/ref/contrib/postgres/indexes/) |
+| More advanced ORM extensions | Write a custom transform or database function. Try running a parameterized raw query through Django. | [Custom transforms](https://docs.djangoproject.com/en/6.1/howto/custom-lookups/#a-transformer-example) · [Database functions](https://docs.djangoproject.com/en/6.1/ref/models/database-functions/) · [Raw SQL](https://docs.djangoproject.com/en/6.1/topics/db/sql/) |
 
 These topics are follow-up practice. The Helpdesk project is complete when you can demonstrate and explain the features above.
