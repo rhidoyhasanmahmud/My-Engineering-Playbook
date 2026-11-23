@@ -1,14 +1,18 @@
 # Phase 01 · Part 2 — Build a Helpdesk with Django Models
 
-Build a small website where people can report a problem and support agents can fix it. For example, a user opens a ticket called **“I cannot log in.”** An agent finds it in the queue, claims it, adds a comment and marks it as resolved. The support report then shows the ticket as resolved.
+Build a small website where people can report a problem and support agents can fix it. For example, a requester opens a ticket called **“My invoice is incorrect.”** An agent finds it in the queue, claims it, adds a comment and marks it as resolved. The support report then shows the ticket as resolved.
 
 **Your main goal is to learn Django models and the ORM.** Each screen gives you a reason to design a model, write a query or enforce a data rule. Use PostgreSQL with simple Django views, forms and templates. Complete [Part 1 — SQL practice](../README.md) first. Use the [Django model-layer docs](https://docs.djangoproject.com/en/6.1/#the-model-layer) for your installed version.
+
+## Scope for this phase
+
+This is a local demo with no sign-in, accounts or access permissions. Use sample `Person` records for requesters and link each demo agent's `AgentProfile` to a `Person`. Pick a requester, author or agent from a form when the action needs one. These names are demo inputs, so any reviewer can open any queue or report. Authentication and authorization come in a later phase.
 
 ## What you will build
 
 | Screen | What someone can do |
 | --- | --- |
-| **New Ticket** | Enter a title and description, choose a category and priority, and submit the ticket. |
+| **New Ticket** | Choose a demo requester, enter a title and description, choose a category and priority, and submit the ticket. |
 | **Ticket Queue** | Find open or unassigned tickets, filter the list, and search by ticket reference. |
 | **Ticket Detail** | See the requester and assignee, add comments and tags, claim or resolve the ticket, and read its status history. |
 | **Support Reports** | See category counts, agent workload, ticket activity, backlog age and agent rankings. |
@@ -24,28 +28,28 @@ Build one stage at a time. Demo it before reading the next stage. Keep the same 
 | **3 · A system with existing data (F08–F10)** | Users need a permanent ticket reference and a way to find older tickets. | Upgrade a database with old tickets. Find one by its full reference and filter the queue by reference year. |
 | **4 · A helpdesk with multiple teams (F11–F13)** | Route work to the right team, track response deadlines and answer questions about past ticket statuses. | Route a ticket, show its response deadline, resolve and reopen it, then run a report for a time before it was reopened. |
 
-Create categories, tags and demo accounts in Django admin or with sample data.
+Load sample people, agent profiles, categories, tags and teams with fixtures or a seed command as those models are introduced.
 
 ## 1. Build a small helpdesk
 
 ### F01 · Open a ticket
 
-- **Build in the UI:** Start with a title, description and category. After a successful submission, open the ticket's detail page. Set the requester from the logged-in user and default the status to Open.
-- **Learn with Django models:** Create `Ticket` and `Category`. Choose field types, status choices, defaults, timestamps and foreign keys. Create and run migrations.
+- **Build in the UI:** Start with a title, description and category. After a successful submission, open the ticket's detail page. Choose the requester from the sample people in the form and default the status to Open.
+- **Learn with Django models:** Create `Person`, `Ticket` and `Category`. Link the ticket to its requester and category. Choose field types, status choices, defaults and timestamps. Create and run migrations.
 - **Check your work:** Submit a valid ticket, reload its detail page and confirm the data is still there. Use `sqlmigrate` to find the table, primary key and foreign keys.
 - **Read:** [Model fields](https://docs.djangoproject.com/en/6.1/ref/models/fields/) · [Migrations](https://docs.djangoproject.com/en/6.1/topics/migrations/)
 
 ### F02 · Show who owns a ticket
 
 - **Build in the UI:** On **Ticket Detail**, show the agent's name or **Unassigned**. Add priority choices to the ticket form and an optional estimate in minutes. Show a clear error if the estimate is negative.
-- **Learn with Django models:** Link `AgentProfile` one-to-one with a user and link the optional assignee to the ticket. Use database constraints for unique category names and nonnegative estimates. Learn how `blank` differs from `null`.
+- **Learn with Django models:** Link `AgentProfile` one-to-one with a `Person` and link the optional assignee to the ticket. Use database constraints for unique category names and nonnegative estimates. Learn how `blank` differs from `null`.
 - **Check your work:** Save a ticket with no assignee and no estimate. Test a blank title with `full_clean()` and with direct `save()`. Test that PostgreSQL rejects a negative estimate or a duplicate category even when the form is bypassed.
 - **Read:** [Relationships](https://docs.djangoproject.com/en/6.1/topics/db/models/#relationships) · [Model validation](https://docs.djangoproject.com/en/6.1/ref/models/instances/#validating-objects) · [Constraints](https://docs.djangoproject.com/en/6.1/ref/models/constraints/)
 
 ### F03 · Add comments and tags
 
-- **Build in the UI:** On **Ticket Detail**, add a comment and see it in the comment list. Attach an existing tag and show when and by whom it was added.
-- **Learn with Django models:** A ticket has many comments and many tags. Use a `TicketTag` through model to store the tag assignment details. Use reverse relations and a unique constraint for each ticket/tag pair.
+- **Build in the UI:** On **Ticket Detail**, choose a sample person as the author, add a comment and see it in the comment list. Attach an existing tag and show when and by whom it was added.
+- **Learn with Django models:** A ticket has many comments and many tags. Link the comment author and the person who adds a tag to `Person`. Use a `TicketTag` through model to store the tag assignment details. Use reverse relations and a unique constraint for each ticket/tag pair.
 - **Check your work:** Add the same tag twice and confirm only one link exists. Test that deleting a ticket removes its comments (`CASCADE`), deleting its assignee clears the assignment (`SET_NULL`), and deleting a category in use is blocked (`PROTECT`).
 - **Read:** [Many-to-many through models](https://docs.djangoproject.com/en/6.1/topics/db/models/#extra-fields-on-many-to-many-relationships) · [ForeignKey and delete rules](https://docs.djangoproject.com/en/6.1/ref/models/fields/#foreignkey)
 
@@ -53,14 +57,14 @@ Create categories, tags and demo accounts in Django admin or with sample data.
 
 ### F04 · Claim and resolve a ticket
 
-- **Build in the UI:** Add **Claim** and **Resolve** actions on **Ticket Detail**. Claim assigns an unassigned ticket to the current agent. Resolve updates the status and adds an entry to the status history.
+- **Build in the UI:** Add **Claim** and **Resolve** actions on **Ticket Detail**. Select a demo agent for the action. Claim assigns an unassigned ticket to the selected agent. Resolve updates the status and records the selected agent in the status history.
 - **Learn with Django models:** Use a conditional update or row locking for claims. Use a transaction for the status update and its `StatusChange` record.
 - **Check your work:** Have two agents try to claim the same ticket. Exactly one succeeds, and the other sees a clear message. If saving the history fails, the ticket stays in its previous status.
 - **Read:** [Transactions](https://docs.djangoproject.com/en/6.1/topics/db/transactions/) · [QuerySet updates and locking](https://docs.djangoproject.com/en/6.1/ref/models/querysets/)
 
 ### F05 · Filter the queue
 
-- **Build in the UI:** On **Ticket Queue**, let an agent show open tickets, unassigned tickets or their own tickets. Add priority and date filters. Show the newest tickets first, using ticket ID to break ties.
+- **Build in the UI:** On **Ticket Queue**, show open tickets, unassigned tickets or tickets assigned to a selected agent. Add priority and date filters. Show the newest tickets first, using ticket ID to break ties.
 - **Learn with Django models:** Write reusable QuerySet methods and combine conditions with `Q` objects. Use a manager to expose the queue methods.
 - **Check your work:** Combine two filters and compare the ordered results with your SQL query. On sample tickets, also compare a loop using `save()` with one `QuerySet.update()` for the same priority change. Check the query count and whether the model's `save()` runs.
 - **Read:** [Queries and Q objects](https://docs.djangoproject.com/en/6.1/topics/db/queries/) · [Managers](https://docs.djangoproject.com/en/6.1/topics/db/managers/) · [Bulk updates](https://docs.djangoproject.com/en/6.1/ref/models/querysets/#update)
@@ -119,17 +123,17 @@ Build R01 and R02 first. Finish F07, then return to R03–R05. For each report, 
 
 **New requirement:** One shared queue worked when there were only a few agents. Now Billing and Technical Support need separate queues, and an agent may work on more than one team.
 
-- **Build in the UI:** Give each category a default support team. New tickets go to that team's queue. Show unrouted tickets in a separate view. An agent can claim a team ticket only while they are an active member of that team.
+- **Build in the UI:** Give each category a default support team. New tickets go to that team's queue. Show unrouted tickets in a separate view. When assigning a ticket to a team, accept only a selected agent with an active membership in that team for the claim. This data rule applies to the ticket and the selected agent.
 - **Learn with Django models:** Add `SupportTeam` and `TeamMembership` as a many-to-many through model. Store whether a membership is active and add a unique constraint on the team and agent pair. Store the routed team on the ticket so changing a category's default only affects new tickets. Use migrations to add these fields to the existing database.
-- **Check your work:** Existing tickets with no routed team are still visible. An active member can claim a ticket, but an inactive member and an agent from another team cannot. Changing a category's default team leaves earlier tickets in their original team.
+- **Check your work:** Existing tickets with no routed team are still visible. A claim succeeds with an eligible agent and fails for an inactive member or a member of another team. Anyone reviewing the demo can still open any team's queue. Changing a category's default team leaves earlier tickets in their original team.
 - **Read:** [Relationships and through models](https://docs.djangoproject.com/en/6.1/topics/db/models/#extra-fields-on-many-to-many-relationships) · [Constraints](https://docs.djangoproject.com/en/6.1/ref/models/constraints/) · [Migrations](https://docs.djangoproject.com/en/6.1/topics/migrations/)
 
 ### F12 · Track the first-response deadline
 
 **New requirement:** High-priority tickets need a public agent reply within 4 hours. Other tickets have 24 hours. Changing the rule later must leave existing deadlines intact.
 
-- **Build in the UI:** Show the response deadline and one of four states in the queue: **Waiting**, **Overdue**, **Replied on time** or **Replied late**. Add an **Overdue** filter. Use elapsed hours from creation for this exercise.
-- **Learn with Django models:** Save the deadline at ticket creation and store whether each comment is a public reply written by an agent when it is posted. Find the first qualifying reply with an ordered subquery. Use conditional expressions to calculate the state. For old tickets without a recorded deadline, show **Not tracked**.
+- **Build in the UI:** When adding a comment, choose its demo author and mark it as public or internal. Use that label for deadline calculations. Show the response deadline and one of four states in the queue: **Waiting**, **Overdue**, **Replied on time** or **Replied late**. Add an **Overdue** filter. Use elapsed hours from creation for this exercise.
+- **Learn with Django models:** Save the deadline at ticket creation and store whether each new comment is public and was written by a person with an agent profile at posting time. Find the first qualifying reply with an ordered subquery. Use conditional expressions to calculate the state. For old tickets without a recorded deadline, show **Not tracked**.
 - **Check your work:** A requester comment or an internal note does not stop the clock. A qualifying reply exactly at the deadline is on time, and a ticket with no reply becomes overdue once the deadline passes. An agent leaving a team does not change their past reply. Compare the overdue filter and report output with SQL using a fixed test clock.
 - **Read:** [Subqueries and expressions](https://docs.djangoproject.com/en/6.1/ref/models/expressions/) · [Conditional expressions](https://docs.djangoproject.com/en/6.1/ref/models/conditional-expressions/)
 
@@ -137,14 +141,14 @@ Build R01 and R02 first. Finish F07, then return to R03–R05. For each report, 
 
 **New requirement:** Sometimes a fix fails and a ticket must reopen. A manager also wants to know how many tickets were open, in progress or resolved at an earlier time.
 
-- **Build in the UI:** Add the flow **Open → In Progress → Resolved → Open**. Show who changed each status and when. On **Support Reports**, let a manager choose a cutoff time and see the ticket counts by status at that time.
+- **Build in the UI:** Add the flow **Open → In Progress → Resolved → Open**. Select a demo actor for each change and show that name and time in the history. On **Support Reports**, provide a cutoff time filter for ticket counts by past status.
 - **Learn with Django models:** Record an opening event for new tickets and keep status changes as ordered events. Update the current status and add the event in one transaction. For the report, use a subquery to find each ticket's latest event at or before the cutoff, then count tickets by that status. Use event ID to break timestamp ties.
 - **Check your work:** Reject invalid transitions and duplicate submissions that repeat a completed transition. A ticket resolved Monday and reopened Tuesday still counts as resolved in Monday's report. Exclude tickets created after the cutoff. If an older ticket has no known status at the cutoff, show it in **Unknown** instead of guessing. Verify the report against PostgreSQL.
 - **Read:** [Transactions](https://docs.djangoproject.com/en/6.1/topics/db/transactions/) · [Subqueries and outer references](https://docs.djangoproject.com/en/6.1/ref/models/expressions/) · [Aggregation](https://docs.djangoproject.com/en/6.1/topics/db/aggregation/)
 
 ## Finish and review
 
-- Each student opens a ticket, checks its team and deadline, claims it, adds a public reply, resolves it and reopens it. Run the report for a cutoff before reopening and explain why its result differs from the current queue.
+- Each student selects a requester and opens a ticket, checks its team and deadline, then uses a sample agent to claim it, add a public reply, resolve it and reopen it. Run the report for a cutoff before reopening and explain why its result differs from the current queue.
 - Submit the ER diagram, models, migrations, repeatable sample data and tests. Each student writes their own SQL and ORM queries for the reports.
 - In review, explain how one screen uses the models and complete one new change independently. Example: add an optional due date and show overdue open tickets per agent, including agents with zero overdue tickets.
 
